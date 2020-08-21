@@ -172,7 +172,6 @@ gses = list("GO"=gse_go, "KEGG" = gse_kegg, "MsigDB" = gse_msigdb)
 genes = list("GO"=gene_list, "KEGG" = kegg_gene_list, "MsigDB" = msigdb_gene_list)
 
 idx = sapply(gses,nrow)>0
-
 gses <- gses[idx]
 genes <- genes[idx]
 
