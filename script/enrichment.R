@@ -7,7 +7,7 @@ sink(log, append = TRUE, type = "message")
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-list.of.pkgs <- c("clusterProfiler","pathview", "enrichplot","DOSE","ggplot2")
+list.of.pkgs <- c("clusterProfiler","pathview", "enrichplot","DOSE","ggplot2", "msigdbr")
 new.pkgs <- list.of.pkgs[!(list.of.pkgs %in% installed.packages()[,"Package"])]
 if(length(new.pkgs))
   BiocManager::install(new.pkgs)
@@ -67,12 +67,25 @@ fun_gseKEGG <- function(kegg_gene_list, keyType, kegg_organism, minGS, maxGS, pv
     )
 }
 
+fun_MsigDB <- function(msigdb_gene_list, keyType, msigdb, minGS, maxGS, pvalueCutoff, pAdjustMethod ){
+  gse <- clusterProfiler::GSEA(
+         msigdb_gene_list,
+         TERM2GENE = msigdb,
+         nPerm = 1000,
+         minGSSize = minGS,
+         maxGSSize = maxGS,
+         pvalueCutoff = pvalueCutoff,
+         pAdjustMethod = pAdjustMethod
+         )
+}
+
 ####### main #########
 set.seed(1000)
 output = snakemake@output[[1]]
 # prepare organism
 organism = snakemake@params[["organism_OrgDb"]]
 kegg_organism = snakemake@params[["organism_KEGG"]]
+msigdb_organism = snakemake@params[["organism_MsigDB"]]
 if(!(organism %in% installed.packages()[,"Package"]))
     BiocManager::install(organism, character.only = TRUE)
 library(organism, character.only = TRUE)
@@ -100,19 +113,21 @@ gse_go <- fun_gseGO(
 
 # KEGG
 keyType = snakemake@params[["KEGG_keyType"]]
-if(!tolower(keyType) %in% c('kegg', 'ncbi-geneid','entrezid', 'ncib-proteinid', 'uniprot')){
+if(!(tolower(keyType) %in% c('kegg', 'ncbi-geneid','entrezid', 'ncib-proteinid', 'uniprot'))){
     kegg_gene_list <- fun_convert_geneid(
         gene_list = gene_list,
-        fromType = keyType,
+        fromType = toupper(keyType),
         toType = "ENTREZID",
         orgdb=organism
     )
     keyType = "ncbi-geneid"
+}else{
+  kegg_gene_list = gene_list
 }
 
 gse_kegg = fun_gseKEGG(
   kegg_gene_list = kegg_gene_list,
-  keyType = keyType,
+  keyType = tolower(keyType),
   kegg_organism = kegg_organism,
   minGS = snakemake@params[["KEGG_min_geneset_size"]],
   maxGS = snakemake@params[["KEGG_max_geneset_size"]],
@@ -120,16 +135,49 @@ gse_kegg = fun_gseKEGG(
   pAdjustMethod = snakemake@params[["KEGG_padj_method"]]
 )
 
-gses = list("GO"=gse_go, "KEGG" = gse_kegg)
-genes = list("GO"=gene_list, "KEGG" = kegg_gene_list)
+# MsigDB
+keyType = toupper(snakemake@params[["MsigDB_keyType"]])
+if(!(keyType %in% c('ENTREZID', 'SYMBOL'))){
+  msigdb_gene_list <- fun_convert_geneid(
+    gene_list = gene_list,
+    fromType = keyType,
+    toType = "SYMBOL",
+    orgdb=organism
+  )
+  keyType = "SYMBOL"
+}else{
+  msigdb_gene_list = gene_list
+}
+
+cols = c("gs_name","gene_symbol")
+if(keyType == "ENTREZID"){
+  cols = c("gs_name","entrez_gene")
+}
+db=msigdbr::msigdbr(species = msigdb_organism,
+           category = snakemake@params[["MsigDB_category"]],
+           subcategory = snakemake@params[["MsigDB_subcategory"]])[,cols]
+
+gse_msigdb = fun_MsigDB(
+  msigdb_gene_list = msigdb_gene_list,
+  keyType = keyType,
+  msigdb = db,
+  minGS = snakemake@params[["MsigDB_min_geneset_size"]],
+  maxGS = snakemake@params[["MsigDB_max_geneset_size"]],
+  pvalueCutoff = snakemake@params[["MsigDB_pval_cutoff"]],
+  pAdjustMethod = snakemake@params[["MsigDB_padj_method"]]
+)
+
+
+gses = list("GO"=gse_go, "KEGG" = gse_kegg, "MsigDB" = gse_msigdb)
+genes = list("GO"=gene_list, "KEGG" = kegg_gene_list, "MsigDB" = msigdb_gene_list)
 
 idx = sapply(gses,nrow)>0
+
 gses <- gses[idx]
 genes <- genes[idx]
 
 
 saveRDS(gses, gsub(".pdf",".Rds",output))
-
 
 p1 <- lapply(gses, function(gse){
            clusterProfiler::dotplot(gse,

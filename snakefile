@@ -1,4 +1,4 @@
-configfile: "config.yaml"
+configfile: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/config.yaml"
 
 rule all:
     input:
@@ -16,6 +16,7 @@ rule enrichment:
     params:
         organism_OrgDb=config["organism"]["OrgDb"],
         organism_KEGG=config["organism"]["KEGG"],
+        organism_MsigDB=config["organism"]["MsigDB"],
         GO_ontology = config["GO"]["ontology"],
         GO_keyType = config["GO"]["key_type"],
         GO_min_geneset_size = config["GO"]["min_geneset_size"],
@@ -27,6 +28,13 @@ rule enrichment:
         KEGG_max_geneset_size = config["KEGG"]["max_geneset_size"],
         KEGG_pval_cutoff = config["KEGG"]["pvalue_cutoff"],
         KEGG_padj_method = config["KEGG"]["padj_method"],
+        MsigDB_keyType = config["MsigDB"]["keyType"],
+        MsigDB_category = config["MsigDB"]["category"],
+        MsigDB_subcategory = config["MsigDB"]["subcategory"],
+        MsigDB_min_geneset_size = config["MsigDB"]["min_geneset_size"],
+        MsigDB_max_geneset_size = config["MsigDB"]["max_geneset_size"],
+        MsigDB_pval_cutoff = config["MsigDB"]["pvalue_cutoff"],
+        MsigDB_padj_method = config["MsigDB"]["padj_method"],
         dotplot_showCategory = config["dotplot"]["showCategory"],
         dotplot_color = config["dotplot"]["color"],
         dotplot_fontSize = config["dotplot"]["fontSize"],
@@ -47,6 +55,5 @@ rule enrichment:
         gseaplot_geneSetID = config["gseaplot"]["geneSetID"],
         gseaplot_title = config["gseaplot"]["title"],
         pathview_pathway_id = config["pathvew"]["pathway_id"]
-
     script:
-        "script/enrichment.R"
+        "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/enrichment.R"

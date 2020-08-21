@@ -1,14 +1,17 @@
 input:
     # tab-delimited, two columns: gene and value. No head.
-    gene_list: "test/drosphila_example_de.txt"
+    gene_list: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/human_example_de.txt"
 
-output: "test/enrichment.pdf"
+output: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/enrichment.pdf"
 
 organism:
     # bioconductor organism database list: http://bioconductor.org/packages/release/BiocViews.html#___OrgDb
     OrgDb: "org.Dm.eg.db"
     # KEGG organism list: https://www.genome.jp/kegg/catalog/org_list.html
     KEGG: "dme"
+    # Organism name as defined in msigdbr package. such as "Homo sapiens", "Mus musculus", "Drosophila melanogaster" ...
+    # check avalable organisms in R: msigdbr_show_species()
+    MsigDB: "Drosophila melanogaster"
 
 GO:
     # Ontoloty: BP, MF, "CC" or "ALL"
@@ -29,6 +32,15 @@ KEGG:
     min_geneset_size: 5
     max_geneset_size: 500
     pvalue_cutoff: 0.05
+    padj_method: "none"
+
+MsigDB:
+    category: "C2"
+    subcategory: "CP"
+    keyType: "ENSEMBL"
+    min_geneset_size: 5
+    max_geneset_size: 500
+    pvalue_cutoff: 0.25
     padj_method: "none"
 
 # Details of plot parameters:
