@@ -35,6 +35,8 @@ KEGG:
     padj_method: "none"
 
 MsigDB:
+    # category: H, C1, C2, C3, C4, C5, C6, C7
+    # details could be found at: https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp#H
     category: "C2"
     subcategory: "CP"
     keyType: "ENSEMBL"
