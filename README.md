@@ -1,4 +1,4 @@
-# Gene Set Enrichment Analysis on GO, KEGG, and MSigDB
+## Gene Set Enrichment Analysis on GO, KEGG, and MSigDB
 
 ### Input:
 
