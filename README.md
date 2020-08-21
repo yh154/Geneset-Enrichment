@@ -12,4 +12,4 @@
 ![alt text](https://github.com/yh154/Geneset-Enrichment/blob/master/output/cnetplot.png)
 ![alt text](https://github.com/yh154/Geneset-Enrichment/blob/master/output/redgeplot.png)
 ![alt text](https://github.com/yh154/Geneset-Enrichment/blob/master/output/gseaplot.png)
-![alt text](https://github.com/yh154/Geneset-Enrichment/blob/master/output/pathway.png)
+![alt text](https://github.com/yh154/Geneset-Enrichment/blob/master/output/pathview.png)
