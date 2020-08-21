@@ -1,0 +1,66 @@
+input:
+    # tab-delimited, two columns: gene and value. No head.
+    gene_list: "test/drosphila_example_de.txt"
+
+output: "test/enrichment.pdf"
+
+organism:
+    # bioconductor organism database list: http://bioconductor.org/packages/release/BiocViews.html#___OrgDb
+    OrgDb: "org.Dm.eg.db"
+    # KEGG organism list: https://www.genome.jp/kegg/catalog/org_list.html
+    KEGG: "dme"
+
+GO:
+    # Ontoloty: BP, MF, "CC" or "ALL"
+    ontology: "BP"
+    # KeyType: input identity type, such as "ENSEMBL", "SYMBOL" ....
+    #          Depends on the database: keytypes(org.Dm.eg.db)
+    key_type: "ENSEMBL"
+    min_geneset_size: 5
+    max_geneset_size: 500
+    pvalue_cutoff: 0.05
+    # padj method: “holm”, “hochberg”, “hommel”, “bonferroni”, “BH”, “BY”, “fdr”, “none”
+    padj_method: "none"
+
+KEGG:
+    # input keyType: one of "kegg", 'ncbi-geneid', 'ncbi-proteinid' and 'uniprot'
+    # Note: ENTREZID is the same as 'ncbi-geneid'
+    keyType: "ENSEMBL"
+    min_geneset_size: 5
+    max_geneset_size: 500
+    pvalue_cutoff: 0.05
+    padj_method: "none"
+
+# Details of plot parameters:
+# https://bioconductor.org/packages/devel/bioc/manuals/enrichplot/man/enrichplot.pdf
+dotplot:
+    color: "p.adjust" # 'pvalue', 'p.ajust' or 'qvalue'
+    showCategory: 10
+    fontSize: 10
+    title: ""
+
+emaplot:
+    showCategory: 10
+    color: "p.adjust" # 'pvalue', p.'adjust' or 'qvalue'
+    layout: "nicely"
+    pie_scale: 1
+    line_scale: 1
+
+cnetplot:
+    showCategory: 3
+    layout: "kk"
+    colorEdge: FALSE # whether coloring edge by enriched terms
+    circular: FALSE # whether using circular layout
+    node_label: "all" # ’category’, ’gene’, ’all’ and ’none’
+
+redgeplot:
+    showCategory: 10
+    fill: "p.adjust" # "pvalue", "p.adjust", "qvalue"
+    core_enrichment: TRUE
+
+gseaplot:
+    geneSetID: 1
+    title: ""
+
+pathvew:
+    pathway_id: "dme04130, dme03015"
