@@ -1,8 +1,8 @@
 input:
     # tab-delimited, two columns: gene and value. No head.
-    gene_list: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/human_example_de.txt"
+    gene_list: "test/human_example_de.txt"
 
-output: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/enrichment.pdf"
+output: "test/enrichment.pdf"
 
 organism:
     # bioconductor organism database list: http://bioconductor.org/packages/release/BiocViews.html#___OrgDb

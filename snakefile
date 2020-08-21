@@ -1,4 +1,4 @@
-configfile: "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/config.yaml"
+configfile: "config.yaml"
 
 rule all:
     input:
@@ -10,9 +10,7 @@ rule enrichment:
     output:
         config["output"]
     log:
-        "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/enrichment.log"
-    #conda:
-    #    "/Users/yuanhao/Analysis/Poirier/workflow/preseq/preseqr.yaml"
+        "enrichment.log"
     params:
         organism_OrgDb=config["organism"]["OrgDb"],
         organism_KEGG=config["organism"]["KEGG"],
@@ -56,4 +54,4 @@ rule enrichment:
         gseaplot_title = config["gseaplot"]["title"],
         pathview_pathway_id = config["pathvew"]["pathway_id"]
     script:
-        "/Users/yuanhao/Analysis/Poirier/workflow/enrichment/enrichment.R"
+        "script/enrichment.R"
