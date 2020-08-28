@@ -1,6 +1,6 @@
 input:
     # tab-delimited, two columns: gene and value. No head.
-    gene_list: "test/human_example_de.txt"
+    gene_list: "test/drosphila_example_de.txt"
 
 output: "test/enrichment.pdf"
 
