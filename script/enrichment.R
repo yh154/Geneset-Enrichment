@@ -67,7 +67,7 @@ fun_gseKEGG <- function(kegg_gene_list, keyType, kegg_organism, minGS, maxGS, pv
     )
 }
 
-fun_MsigDB <- function(msigdb_gene_list, keyType, msigdb, minGS, maxGS, pvalueCutoff, pAdjustMethod ){
+fun_MsigDB <- function(msigdb_gene_list, msigdb, minGS, maxGS, pvalueCutoff, pAdjustMethod ){
   gse <- clusterProfiler::GSEA(
          msigdb_gene_list,
          TERM2GENE = msigdb,
@@ -153,13 +153,13 @@ cols = c("gs_name","gene_symbol")
 if(keyType == "ENTREZID"){
   cols = c("gs_name","entrez_gene")
 }
+#msigdbr::msigdbr_show_species()
 db=msigdbr::msigdbr(species = msigdb_organism,
            category = snakemake@params[["MsigDB_category"]],
            subcategory = snakemake@params[["MsigDB_subcategory"]])[,cols]
 
 gse_msigdb = fun_MsigDB(
   msigdb_gene_list = msigdb_gene_list,
-  keyType = keyType,
   msigdb = db,
   minGS = snakemake@params[["MsigDB_min_geneset_size"]],
   maxGS = snakemake@params[["MsigDB_max_geneset_size"]],
@@ -172,6 +172,7 @@ gses = list("GO"=gse_go, "KEGG" = gse_kegg, "MsigDB" = gse_msigdb)
 genes = list("GO"=gene_list, "KEGG" = kegg_gene_list, "MsigDB" = msigdb_gene_list)
 
 idx = sapply(gses,nrow)>0
+
 gses <- gses[idx]
 genes <- genes[idx]
 
